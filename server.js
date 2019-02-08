@@ -83,16 +83,16 @@ app.patch('/books/:id', (req, res) => {
             book.rating = body.rating;
         }
 
-        Book.findByIdAndUpdate(bookID, {$set: body}, {new: true}).then((book) => {
+        return Book.findByIdAndUpdate(bookID, { $set: body }, { new: true });
+    }).then((book) => {
             if (!book) {
                 return res.status(404).send();
             }
 
-            res.send({ book });
+            res.send({
+                book
+            });
         }).catch((err) => {
-            res.status(400).send();
-        });
-    }).catch((err) => {
         res.status(400).send();
     });
 });

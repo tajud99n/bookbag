@@ -4,31 +4,11 @@ const { ObjectID } = require("mongodb");
 
 const { app } = require("./../server");
 const Book = require("./../models/book");
+const {books, seedBooks, users, seedUsers} = require('./seed/seed');
 
-const books = [
-    {
-        _id: new ObjectID(),
-        title: "dummy book one",
-        author: "dummy author one",
-        isbn: "123-00994",
-        rating: 5
-    },
-    {
-        _id: new ObjectID(),
-        title: "dummy book two",
-        author: "dummy author two",
-        isbn: "123-00s-555994",
-        rating: 2
-    }
-];
 
-beforeEach(done => {
-    Book.deleteMany({})
-        .then(() => {
-            Book.insertMany(books);
-        })
-        .then(() => done());
-});
+beforeEach(seedUsers);
+beforeEach(seedBooks);
 
 describe("GET /", () => {
     it("should response with a 200", done => {
