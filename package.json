@@ -1,0 +1,32 @@
+{
+  "name": "bookbag-app",
+  "version": "1.0.0",
+  "description": "An API for books and their ratings",
+  "main": "index.js",
+  "scripts": {
+    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha _test_/*.test.js",
+    "test-watch": "nodemon --exec \"npm test\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tajud99n/bookbag.git"
+  },
+  "author": "Tajudeen Giwa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tajud99n/bookbag/issues"
+  },
+  "homepage": "https://github.com/tajud99n/bookbag#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "mongodb": "^3.1.13",
+    "mongoose": "^5.4.9"
+  },
+  "devDependencies": {
+    "expect": "^24.1.0",
+    "mocha": "^5.2.0",
+    "supertest": "^3.4.2"
+  }
+}
