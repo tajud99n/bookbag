@@ -4,7 +4,7 @@
   "description": "An API for books and their ratings",
   "main": "index.js",
   "scripts": {
-    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha _test_/*.test.js",
+    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha --timeout=15000 _test_/*.test.js",
     "test-watch": "nodemon --exec \"npm test\""
   },
   "repository": {

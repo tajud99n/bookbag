@@ -49,8 +49,8 @@ const seedUsers = done => {
         var userOne = new User(users[0]).save();
         var userTwo = new User(users[1]).save();
 
-        return Promise.all([userOne, userTwo])
-    }).then(() => done());
+        return Promise.all([userOne, userTwo]);
+    }).then(() => done()).catch(err => console.log(err));
 };
 
 module.exports = {books, seedBooks, users, seedUsers};
