@@ -23,6 +23,10 @@ var Book = mongoose.model('Book', {
         type: Number,
         required: true,
         maxlength: 1
+    },
+    _creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true        
     }
 });
 

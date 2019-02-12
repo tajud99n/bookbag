@@ -20,12 +20,13 @@ app.get('/', (req, res) => {
 });
 
 // Books Routes
-app.post('/books', (req, res) => {
+app.post('/books', authenticate, (req, res) => {
     var book = new Book({
         title: req.body.title,
         author: req.body.author,
         isbn: req.body.isbn,
-        rating: req.body.rating
+        rating: req.body.rating,
+        _creator: req.user._id
     });
 
     book.save().then((book) => {
@@ -35,7 +36,15 @@ app.post('/books', (req, res) => {
     });
 });
 
-app.get("/books", (req, res) => {
+app.get("/books", authenticate, (req, res) => {
+    Book.find({_creator: req.user._id}).then((books) => {
+        res.send({ books });
+    }).catch((err) => {
+        res.status(404).send(err);
+    });
+});
+
+app.get("/books/all", (req, res) => {
     Book.find().then((books) => {
         res.send({ books });
     }).catch((err) => {
@@ -43,14 +52,14 @@ app.get("/books", (req, res) => {
     });
 });
 
-app.get('/books/:id', (req, res) => {
+app.get('/books/:id', authenticate, (req, res) => {
     var bookID = req.params.id;
 
     if (!ObjectID.isValid(bookID)) {
         return res.status(404).send();
     }
 
-    Book.findById(bookID).then(book => {
+    Book.findOne({_id: bookID, _creator: req.user.id}).then(book => {
         if (!book) {
             return res.status(404).send();
         }
@@ -60,7 +69,7 @@ app.get('/books/:id', (req, res) => {
     });
 });
 
-app.patch('/books/:id', (req, res) => {
+app.patch('/books/:id', authenticate, (req, res) => {
     var bookID = req.params.id;
     var body = _.pick(req.body, ['title', 'author', 'isbn', 'rating']);
 
@@ -68,7 +77,7 @@ app.patch('/books/:id', (req, res) => {
         return res.status(404).send();
     }
 
-    Book.findById(bookID).then((book) => {
+    Book.findOne({_id: bookID, _creator: req.user.id}).then((book) => {
         if (!book) {
             return res.status(404).send();
         }
@@ -83,7 +92,7 @@ app.patch('/books/:id', (req, res) => {
             book.rating = body.rating;
         }
 
-        return Book.findByIdAndUpdate(bookID, { $set: body }, { new: true });
+        return Book.findOneAndUpdate({_id: bookID, _creator: req.user.id}, { $set: body }, { new: true });
     }).then((book) => {
             if (!book) {
                 return res.status(404).send();
@@ -97,14 +106,14 @@ app.patch('/books/:id', (req, res) => {
     });
 });
 
-app.delete('/books/:id', (req, res) => {
+app.delete('/books/:id', authenticate, (req, res) => {
     var bookID = req.params.id;
 
     if (!ObjectID.isValid(bookID)) {
         return res.status(404).send();
     }
 
-    Book.findByIdAndDelete(bookID).then((book) => {
+    Book.findOneAndDelete({_id: bookID, _creator: req.user.id}).then((book) => {
         if (!book) {
             return res.status(404).send();
         }
@@ -134,7 +143,7 @@ app.post('/users/login', (req, res) => {
 
     User.findByCredentials(body.email, body.password).then((user) => {
         return user.generateAuthToken().then(token => {
-            res.header('x-auth', token).send({user, 'x-auth': token});
+            res.header('x-auth', token).send(user);
         });
     }).catch((err) => {
         res.status(400).send();

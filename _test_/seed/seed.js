@@ -4,19 +4,23 @@ const jwt = require('jsonwebtoken');
 const Book = require('./../../models/book');
 const User = require('./../../models/user');
 
+const userOneId = new ObjectID();
+const userTwoId = new ObjectID();
 const books = [{
         _id: new ObjectID(),
         title: "dummy book one",
         author: "dummy author one",
         isbn: "123-00994",
-        rating: 5
+        rating: 5,
+        _creator: userOneId
     },
     {
         _id: new ObjectID(),
         title: "dummy book two",
         author: "dummy author two",
         isbn: "123-00s-555994",
-        rating: 2
+        rating: 2,
+        _creator: userTwoId
     }
 ];
 
@@ -28,8 +32,7 @@ const seedBooks = done => {
         .then(() => done());
 };
 
-const userOneId = new ObjectID();
-const userTwoId = new ObjectID();
+
 const users = [{
     _id: userOneId,
     email: "book@example.com",
@@ -41,7 +44,11 @@ const users = [{
 }, {
     _id: userTwoId,
     email: "john@doe.com",
-    password: "password"
+    password: "password",
+    tokens: [{
+        access: "auth",
+        token: jwt.sign({ _id: userTwoId, access: 'auth' }, "appSecret").toString()
+    }]
 }];
 
 const seedUsers = done => {
