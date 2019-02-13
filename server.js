@@ -15,8 +15,7 @@ const port = process.env.PORT;
 
 app.use(bodyParser.json());
 app.get('/', (req, res) => {
-    var msg = "welcome";
-    res.send({msg});
+    res.send("welcome to book-bag API.visit https://github.com/tajud99n/bookbag.git for more documentation");
 });
 
 // Books Routes
